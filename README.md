@@ -46,19 +46,56 @@ Supplier lead time and service level are operational parameters because the data
 
 ## Setup and run
 
-PowerShell:
+### 1. Clone the repository
+
+Open PowerShell and run:
 
 ```powershell
+git clone https://github.com/nehithachoudhary/AI-Driven-demand-forecasting.git
+cd AI-Driven-demand-forecasting
+```
+
+### 2. Create and activate a virtual environment
+
+```powershell
+python -m venv venv
 .\venv\Scripts\Activate.ps1
+```
+
+If PowerShell blocks activation, run this once in the same PowerShell window and then activate the environment again:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+.\venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```powershell
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+```
+
+### 4. Train the forecasting models
+
+Set the Python module path and run the training pipeline:
+
+```powershell
 $env:PYTHONPATH = '.'
 python train_pipeline.py
+```
+
+Training must be completed once before the dashboard can show model metrics. It saves models under `models/`, processed data under `data/processed/`, figures under `results/figures/`, and metric/prediction files under `results/`. TensorFlow 2.21.0 is required for the LSTM stage.
+
+### 5. Start the Flask application
+
+```powershell
 python app.py
 ```
 
-Open `http://127.0.0.1:5000`. Training must be run once before the dashboard can show model metrics. It saves models under `models/`, processed data under `data/processed/`, figures under `results/figures/`, and metric/prediction files under `results/`. TensorFlow 2.21.0 is required for the LSTM stage.
+Open `http://127.0.0.1:5000` in a browser. On first application start, SQLite tables are created automatically. Register an account, add products, record sales, and review inventory alerts.
 
-On first application start, SQLite tables are created automatically. Register an account, add products, record sales, and review inventory alerts. A customer-created product with fewer than 30 sales observations returns an honest insufficient-history response; the application never reuses the global demonstration model for an unrelated customer product.
+A customer-created product with fewer than 30 sales observations returns an honest insufficient-history response; the application never reuses the global demonstration model for an unrelated customer product.
 
 ## API
 
