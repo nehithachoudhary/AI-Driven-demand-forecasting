@@ -1,0 +1,116 @@
+{% extends 'layout.html' %}
+{% block content %}
+<section class="forecast-shell">
+  <div class="welcome"><p class="eyebrow">AI DEMAND PLANNING</p><h2>Demand Forecasting</h2><p class="muted">Compare actual customer sales with the selected model's future demand.</p></div>
+  <section class="panel">
+    <form id="forecast-form" class="form-grid forecast-controls">
+      <label>Product<select id="forecast-product" required><option value="">Select product</option>{% for p in products %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></label>
+      <label class="horizon-field">Forecast Horizon<div class="horizon-picker" id="horizon-picker"><button class="horizon-trigger" id="horizon-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">7 days <span aria-hidden="true">⌄</span></button><div class="horizon-menu" id="horizon-menu" role="listbox" aria-label="Forecast Horizon"><button type="button" role="option" data-value="7" aria-selected="true">7 days</button><button type="button" role="option" data-value="14">14 days</button><button type="button" role="option" data-value="30">30 days</button><button type="button" role="option" data-more>More <span aria-hidden="true">›</span></button></div><input id="forecast-horizon" name="horizon" type="hidden" value="7"></div></label>
+      <button class="primary" id="generate-forecast" type="submit">Generate Forecast</button>
+    </form>
+    <div id="forecast-message" class="flash error" hidden></div>
+  </section>
+  <section id="model-status" class="panel" hidden></section>
+  <section id="forecast-result" hidden>
+    <div class="section-head"><div><p class="section-label">FORECAST RESULTS</p><h2>AI Demand Forecast</h2></div></div>
+    <div class="forecast-summary" id="forecast-summary"></div>
+    <section class="panel chart-card"><div class="section-head"><div><p class="section-label">HISTORICAL DEMAND VS FORECAST</p><h2>Demand Forecast</h2></div><span class="badge">Actuals + AI Forecast</span></div><div class="chart-wrap"><canvas id="demand-chart"></canvas></div><p class="chart-note">The dashed boundary marks the first forecast date. Historical actuals are shown in navy; forecasted demand is shown in blue.</p></section>
+    <div class="forecast-grid">
+      <section class="panel"><p class="section-label">RECENT HISTORICAL SALES</p><h2>Historical Actuals</h2><div class="table-wrap"><table><thead><tr><th>Date</th><th>Actual Quantity</th><th>Unit</th></tr></thead><tbody id="historical-table"></tbody></table></div></section>
+      <section class="panel"><p class="section-label">FORECAST WINDOW</p><h2>AI Forecast</h2><div class="table-wrap"><table><thead><tr><th>Date</th><th>Predicted Demand</th><th>Unit</th></tr></thead><tbody id="forecast-table"></tbody></table></div></section>
+    </div>
+  </section>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+(() => {
+  const product = document.getElementById('forecast-product');
+  const horizon = document.getElementById('forecast-horizon');
+  const horizonPicker = document.getElementById('horizon-picker');
+  const horizonTrigger = document.getElementById('horizon-trigger');
+  const horizonMenu = document.getElementById('horizon-menu');
+  const form = document.getElementById('forecast-form');
+  const button = document.getElementById('generate-forecast');
+  const message = document.getElementById('forecast-message');
+  const result = document.getElementById('forecast-result');
+  const statusCard = document.getElementById('model-status');
+  let chart;
+  let selectedUnit = '';
+  let horizonExpanded = false;
+  const showMessage = (text) => { message.textContent = text; message.hidden = !text; };
+  const json = async (url, options) => {
+    try {
+      const response = await fetch(url, options);
+      const text = await response.text();
+      let body = {};
+      if (text) {
+        try { body = JSON.parse(text); }
+        catch (error) {
+          const clean = text.replace(/<[^>]+>/g, '').trim();
+          throw new Error(clean || 'Forecast unavailable');
+        }
+      }
+      if (!response.ok) {
+        if (body && body.success === false && body.error) throw new Error(body.error);
+        throw new Error(body.error || body.detail || 'Forecast unavailable');
+      }
+      return body;
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw new Error('Unable to connect to the forecasting service. Please make sure the Flask server is running.');
+      }
+      throw error;
+    }
+  };
+  const selectedName = () => product.options[product.selectedIndex]?.textContent?.split(' (')[0] || 'Selected product';
+  const horizonLabels = {7:'7 days',14:'14 days',30:'30 days',90:'90 days (Quarterly)',180:'180 days (Half-Yearly)'};
+  function closeHorizon() { horizonPicker.classList.remove('open'); horizonTrigger.setAttribute('aria-expanded', 'false'); }
+  function showHorizonOptions(expanded) {
+    horizonExpanded = expanded;
+    horizonMenu.innerHTML = (expanded ? [[7, '7 days'], [14, '14 days'], [30, '30 days'], [90, '90 days (Quarterly)'], [180, '180 days (Half-Yearly)']] : [[7, '7 days'], [14, '14 days'], [30, '30 days'], ['more', 'More']]).map(([value, label]) => value === 'more' ? `<button type="button" role="option" data-more>${label} <span aria-hidden="true">›</span></button>` : `<button type="button" role="option" data-value="${value}" aria-selected="${String(value) === horizon.value}">${label}</button>`).join('');
+  }
+  horizonTrigger.addEventListener('click', () => { showHorizonOptions(false); horizonPicker.classList.toggle('open'); horizonTrigger.setAttribute('aria-expanded', String(horizonPicker.classList.contains('open'))); });
+  horizonMenu.addEventListener('click', (event) => { const option = event.target.closest('button'); if (!option) return; if (option.hasAttribute('data-more')) { event.stopPropagation(); showHorizonOptions(true); horizonPicker.classList.add('open'); horizonTrigger.setAttribute('aria-expanded', 'true'); return; } horizon.value = option.dataset.value; horizonTrigger.innerHTML = `${horizonLabels[horizon.value]} <span aria-hidden="true">⌄</span>`; closeHorizon(); });
+  document.addEventListener('click', (event) => { if (!horizonPicker.contains(event.target)) closeHorizon(); });
+  async function loadStatus() {
+    if (!product.value) { statusCard.hidden = true; result.hidden = true; return; }
+    try {
+      const status = await json(`/api/forecasts/${product.value}`);
+      statusCard.hidden = false;
+      const ready = status.status === 'trained';
+      const stale = status.status === 'stale';
+      statusCard.innerHTML = `<div class="status-row"><div><p class="section-label">MODEL STATUS</p><h2>${ready ? '✓ Model Ready' : stale ? 'Retraining Recommended' : 'Customer Model Not Trained'}</h2><p class="muted">Historical records: ${status.record_count} · Required: ${status.required_records}</p></div><div>${ready ? `<span class="badge healthy-stock">Customer LSTM</span>` : `<button class="primary" data-train>${status.record_count >= status.required_records ? (stale ? 'Retrain Model' : 'Train Customer Model') : 'Insufficient History'}</button>`}</div></div>`;
+      const train = statusCard.querySelector('[data-train]');
+      if (train && status.record_count >= status.required_records) train.onclick = async () => { train.disabled = true; train.textContent = 'Training...'; try { await json(`/api/forecasts/${product.value}/train`, {method:'POST'}); await loadStatus(); } catch (error) { showMessage(error.message); train.disabled = false; train.textContent = stale ? 'Retrain Model' : 'Train Customer Model'; } };
+      if (!ready) { result.hidden = true; if (status.record_count < status.required_records) showMessage(`Insufficient historical data. Current records: ${status.record_count}. Required records: ${status.required_records}.`); }
+      else showMessage('');
+    } catch (error) { statusCard.hidden = false; statusCard.innerHTML = `<div class="flash error">${error.message}</div>`; result.hidden = true; }
+  }
+  function drawChart(history, forecasts, unit) {
+    const actualLabels = history.map(row => row.sale_date);
+    const forecastLabels = forecasts.map(row => row.Date);
+    const labels = actualLabels.concat(forecastLabels);
+    const actualValues = history.map(row => Number(row.quantity)).concat(Array(forecasts.length).fill(null));
+    const forecastValues = Array(Math.max(0, history.length - 1)).fill(null).concat([Number(history.at(-1)?.quantity || 0)]).concat(forecasts.map(row => Number(row['Predicted Demand'])));
+    if (typeof Chart !== 'function') throw new Error('Forecast graph could not be loaded. The forecast table is still available.');
+    if (chart) chart.destroy();
+    chart = new Chart(document.getElementById('demand-chart'), {type:'line',data:{labels,datasets:[{label:`Historical Actuals${unit ? ` (${unit})` : ''}`,data:actualValues,borderColor:'#13283f',backgroundColor:'#13283f',pointRadius:2,tension:.25},{label:`AI Forecast${unit ? ` (${unit})` : ''}`,data:forecastValues,borderColor:'#2563eb',backgroundColor:'#2563eb',borderDash:[7,5],pointRadius:3,tension:.25}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom'},annotation:{}},scales:{x:{title:{display:true,text:'Date'},ticks:{maxTicksLimit:10,autoSkip:true,callback:function(value){const date=String(this.getLabelForValue(value)).split('-').map(Number); return date.length === 3 ? new Date(date[0],date[1]-1,date[2]).toLocaleDateString(undefined,{month:'short',day:'numeric'}) : value;}}},y:{title:{display:true,text:unit ? `Demand (${unit})` : 'Demand'},beginAtZero:true}}}});
+  }
+  function renderResult(history, forecasts, model) {
+    if (!Array.isArray(forecasts) || !forecasts.length) throw new Error('The forecasting service returned no forecast values.');
+    const values = forecasts.map(row => Number(row['Predicted Demand']));
+    if (values.some(value => !Number.isFinite(value))) throw new Error('The forecasting service returned invalid forecast values.');
+    const avg = values.reduce((a,b)=>a+b,0) / values.length;
+    const unit = selectedUnit || '';
+    document.getElementById('forecast-summary').innerHTML = [['Product', selectedName()],['Model', model],['Horizon', `${values.length} days`],['Forecast Range', `${forecasts[0].Date} to ${forecasts.at(-1).Date}`],['Average Forecast', `${avg.toFixed(2)}${unit ? ` ${unit}/day` : ''}`],['Peak Demand', `${Math.max(...values).toFixed(2)}${unit ? ` ${unit}` : ''}`],['Minimum Demand', `${Math.min(...values).toFixed(2)}${unit ? ` ${unit}` : ''}`]].map(item=>`<div class="summary-stat"><span>${item[0]}</span><strong>${item[1]}</strong></div>`).join('');
+    document.getElementById('historical-table').innerHTML = history.slice(-15).reverse().map(row=>`<tr><td>${row.sale_date}</td><td>${Number(row.quantity).toFixed(2)}</td><td>${unit || '—'}</td></tr>`).join('') || '<tr><td colspan="3" class="empty">No historical sales found.</td></tr>';
+    document.getElementById('forecast-table').innerHTML = forecasts.map(row=>`<tr><td>${row.Date}</td><td>${Number(row['Predicted Demand']).toFixed(2)}</td><td>${unit || '—'}</td></tr>`).join('');
+    result.hidden = false;
+    try { drawChart(history.slice(-60), forecasts, unit); }
+    catch (error) { showMessage(error.message); }
+  }
+  product.addEventListener('change', loadStatus);
+  form.addEventListener('submit', async (event) => { event.preventDefault(); if (!product.value) return showMessage('Select a product first.'); button.disabled = true; button.textContent = 'Generating forecast...'; showMessage(''); try { const [forecast, sales, products] = await Promise.all([json(`/api/forecasts/${product.value}/generate`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({horizon:Number(horizon.value)})}), json('/api/sales'), json('/api/products')]); const current = products.find(item => String(item.id) === String(product.value)); selectedUnit = current?.unit || ''; renderResult(sales.filter(row => String(row.product_id) === String(product.value) && row.sale_date <= new Date().toISOString().slice(0,10)), forecast.forecast, forecast.model_used); } catch(error) { result.hidden = true; showMessage(error.message); } finally { button.disabled = false; button.textContent = 'Generate Forecast'; } });
+})();
+</script>
+{% endblock %}

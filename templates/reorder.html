@@ -1,0 +1,138 @@
+{% extends 'layout.html' %}
+{% block content %}
+<section class="panel reorder-shell">
+  <div class="welcome">
+    <p class="eyebrow">WHOLESALE OPERATIONS</p>
+    <h2>Reorder Recommendation</h2>
+    <p class="muted">Product: {{ payload.product.name }}</p>
+  </div>
+
+  <div class="reorder-grid">
+    <section class="panel">
+      <p class="section-label">CURRENT INVENTORY</p>
+      <h2>{{ payload.product.name }}</h2>
+      <div class="kv-grid">
+        <div><span>Current Stock</span><strong>{{ payload.product.current_stock }} {{ payload.product.unit }}</strong></div>
+        <div><span>Average Daily Demand</span><strong>{{ '%.2f' % payload.product.average_daily_demand }} {{ payload.product.unit }}/day</strong></div>
+        <div><span>Safety Stock</span><strong>{{ '%.2f' % payload.calculation.safety_stock }} {{ payload.product.unit }}</strong></div>
+        <div><span>Reorder Point</span><strong>{{ '%.2f' % payload.calculation.reorder_point }} {{ payload.product.unit }}</strong></div>
+        <div><span>Stock Coverage</span><strong>{{ '%.2f' % payload.product.stock_coverage if payload.product.stock_coverage is not none else 'N/A' }} days</strong></div>
+        <div><span>Stock Status</span><strong>{{ payload.product.status }}</strong></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="section-label">REORDER CALCULATION</p>
+      <div class="kv-grid">
+        <div><span>Safety Stock</span><strong>{{ '%.2f' % payload.calculation.safety_stock }} {{ payload.product.unit }}</strong></div>
+        <div><span>Reorder Point</span><strong>{{ '%.2f' % payload.calculation.reorder_point }} {{ payload.product.unit }}</strong></div>
+        <div><span>Target Stock After Replenishment</span><strong>{{ '%.2f' % payload.calculation.target_stock }} {{ payload.product.unit }}</strong></div>
+        <div><span>Recommended Order Quantity</span><strong>{{ '%.2f' % payload.calculation.recommended_order_quantity }} {{ payload.product.unit }}</strong></div>
+        <div><span>Service Level</span><strong>{{ '%.0f' % (payload.calculation.service_level * 100) }}%</strong></div>
+        <div><span>Lead Time</span><strong>{{ payload.calculation.lead_time }} days</strong></div>
+      </div>
+      <p class="muted">Safety stock is the reserve quantity maintained to protect against demand variability and replenishment delays.</p>
+    </section>
+  </div>
+
+  <section class="panel">
+    <p class="section-label">HISTORICAL SALES</p>
+    <h2>Sales History</h2>
+    <div class="summary-grid">
+      <div class="summary-stat"><span>Total Sales</span><strong>{{ '%.2f' % payload.summary.total_sales }} {{ payload.product.unit }}</strong></div>
+      <div class="summary-stat"><span>Average Daily Sales</span><strong>{{ '%.2f' % payload.summary.average_daily_sales }} {{ payload.product.unit }}/day</strong></div>
+      <div class="summary-stat"><span>Highest Daily Sales</span><strong>{{ '%.2f' % payload.summary.highest_daily_sales }} {{ payload.product.unit }}</strong></div>
+      <div class="summary-stat"><span>Lowest Daily Sales</span><strong>{{ '%.2f' % payload.summary.lowest_daily_sales }} {{ payload.product.unit }}</strong></div>
+      <div class="summary-stat"><span>Number of Sales Records</span><strong>{{ payload.summary.record_count }}</strong></div>
+      <div class="summary-stat"><span>First Recorded Sale</span><strong>{{ payload.summary.first_recorded_sale or 'N/A' }}</strong></div>
+      <div class="summary-stat"><span>Latest Recorded Sale</span><strong>{{ payload.summary.latest_recorded_sale or 'N/A' }}</strong></div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="historical-sales-chart"></canvas>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Quantity Sold</th>
+            <th>Unit</th>
+            <th>Amount</th>
+            <th>Buyer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in payload.sales %}
+          <tr>
+            <td>{{ row.sale_date }}</td>
+            <td>{{ '%.2f' % row.quantity }}</td>
+            <td>{{ row.unit }}</td>
+            <td>{{ row.selling_price if row.selling_price is not none else '—' }}</td>
+            <td>{{ row.buyer or '—' }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="empty">No sales history available.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <p class="section-label">AI DEMAND FORECAST</p>
+    <h2>Forecast Information</h2>
+    {% if payload.forecast %}
+      <div class="summary-grid">
+        <div class="summary-stat"><span>Forecast Horizon</span><strong>7 Days</strong></div>
+        <div class="summary-stat"><span>Expected Demand</span><strong>{{ '%.2f' % (payload.forecast|sum(attribute='Predicted Demand')) }} {{ payload.product.unit }}</strong></div>
+      </div>
+    {% else %}
+      <p class="muted">Customer-specific forecast is currently unavailable.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <p class="section-label">WHY REORDER?</p>
+    <h2>Reorder Rationale</h2>
+    <p>Current stock is below the calculated reorder point. Based on historical demand, forecast demand, lead time, and safety stock requirements, additional inventory is recommended.</p>
+    <p class="muted">Ordering approximately {{ '%.2f' % payload.calculation.recommended_order_quantity }} {{ payload.product.unit }} would bring expected stock toward the calculated target level.</p>
+  </section>
+
+  <div class="action-row">
+    <form method="post" action="{{ url_for('reorder_submit', product_id=payload.product.id) }}">
+      <button class="primary" type="submit">Confirm Reorder</button>
+    </form>
+    <a class="button" href="{{ url_for('alerts_page') }}">Cancel</a>
+  </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+  const labels = {{ payload.sales | map(attribute='sale_date') | list | tojson }};
+  const values = {{ payload.sales | map(attribute='quantity') | list | tojson }};
+  if (labels.length && values.length) {
+    new Chart(document.getElementById('historical-sales-chart'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Quantity Sold',
+          data: values,
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.18)',
+          tension: 0.2,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: true } },
+        scales: {
+          x: { title: { display: true, text: 'Date' } },
+          y: { title: { display: true, text: 'Quantity Sold' }, beginAtZero: false }
+        }
+      }
+    });
+  }
+</script>
+{% endblock %}

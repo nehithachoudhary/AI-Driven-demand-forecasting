@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}{% block content %}
+<section class="page-intro"><div><p class="eyebrow">RISK MONITORING</p><h2>Alerts & resolutions</h2><p class="muted">Current inventory signals stay active until the underlying stock condition changes.</p></div><a class="button" href="{{ url_for('inventory_page') }}">View inventory</a></section>
+<section class="panel alert-panel">
+  <div class="section-head"><div><p class="section-label">ACTIVE ALERTS</p><h2>Current Reorder Alerts</h2></div><span class="count-chip">{{ active_alerts|length }} active</span></div>
+  {% if active_alerts %}
+    <div class="table-wrap"><table><thead><tr><th>Product</th><th>Current Stock</th><th>Safety Stock</th><th>Severity</th><th>Message</th><th>Date</th><th>Action</th></tr></thead><tbody>{% for alert in active_alerts %}<tr><td>{{ alert.product_name }}</td><td>{{ alert.current_stock }}</td><td>{{ alert.safety_stock }}</td><td><span class="badge {{ alert.severity }}">{{ alert.severity }}</span></td><td>{{ alert.message }}</td><td>{{ alert.created_at }}</td><td>{% if alert.alert_type == 'REORDER' %}<a class="button" href="{{ url_for('reorder_page', product_id=alert.product_id) }}">Reorder</a>{% else %}<span class="muted">—</span>{% endif %}</td></tr>{% endfor %}</tbody></table></div>
+  {% else %}
+    <p class="empty">No active alerts. All products are currently within their inventory thresholds.</p>
+  {% endif %}
+</section>
+
+<section class="panel history-panel">
+  <div class="section-head"><div><p class="section-label">ALERT HISTORY</p><h2>Alert History</h2></div><span class="muted">Resolved conditions</span></div>
+  {% if history_alerts %}
+    <div class="table-wrap"><table><thead><tr><th>Product</th><th>Previous Stock</th><th>Safety Stock</th><th>Severity</th><th>Message</th><th>Created</th><th>Resolved</th></tr></thead><tbody>{% for alert in history_alerts %}<tr><td>{{ alert.product_name }}</td><td>{{ alert.previous_stock }}</td><td>{{ alert.safety_stock }}</td><td><span class="badge {{ alert.severity }}">{{ alert.severity }}</span></td><td>{{ alert.message }}</td><td>{{ alert.created_at }}</td><td>{{ alert.resolved_at or '—' }}</td></tr>{% endfor %}</tbody></table></div>
+  {% else %}
+    <p class="empty">No alert history available.</p>
+  {% endif %}
+</section>
+{% endblock %}

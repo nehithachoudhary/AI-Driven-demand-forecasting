@@ -1,0 +1,728 @@
+{
+  "dataset": {
+    "rows": 76000,
+    "columns": 16,
+    "missing_values": "0",
+    "duplicate_rows": 0,
+    "duplicate_keys": 0,
+    "invalid_numeric_values": {},
+    "date_min": "2022-01-01 00:00:00",
+    "date_max": "2024-01-30 00:00:00",
+    "stores": 5,
+    "products": 20,
+    "categories": 5,
+    "regions": 4,
+    "continuity": [
+      {
+        "Store ID": "S001",
+        "Product ID": "P0001",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0002",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0003",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0004",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0005",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0006",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0007",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0008",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0009",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0010",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0011",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0012",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0013",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0014",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0015",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0016",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0017",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0018",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0019",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S001",
+        "Product ID": "P0020",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0001",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0002",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0003",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0004",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0005",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0006",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0007",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0008",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0009",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0010",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0011",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0012",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0013",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0014",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0015",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0016",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0017",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0018",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0019",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S002",
+        "Product ID": "P0020",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0001",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0002",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0003",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0004",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0005",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0006",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0007",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0008",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0009",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0010",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0011",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0012",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0013",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0014",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0015",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0016",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0017",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0018",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0019",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S003",
+        "Product ID": "P0020",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0001",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0002",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0003",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0004",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0005",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0006",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0007",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0008",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0009",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0010",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0011",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0012",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0013",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0014",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0015",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0016",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0017",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0018",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0019",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S004",
+        "Product ID": "P0020",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0001",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0002",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0003",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0004",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0005",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0006",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0007",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0008",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0009",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0010",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0011",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0012",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0013",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0014",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0015",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0016",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0017",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0018",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0019",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      },
+      {
+        "Store ID": "S005",
+        "Product ID": "P0020",
+        "observations": 760,
+        "expected_days": 760,
+        "missing_days": 0
+      }
+    ]
+  },
+  "training_start": "2022-01-31",
+  "training_end": "2023-12-02",
+  "testing_start": "2023-12-03",
+  "testing_end": "2024-01-30",
+  "sarima_reference": {
+    "store_id": "S001",
+    "product_id": "P0001"
+  },
+  "lstm_status": "trained",
+  "best_model": "LSTM"
+}

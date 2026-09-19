@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}{% block content %}
+<section class="settings-shell">
+	<header class="settings-intro"><p class="eyebrow">WORKSPACE SETTINGS</p><h2>Settings</h2><p class="muted">Manage your preferences and workspace defaults.</p></header>
+	<section class="settings-list" aria-label="Settings categories">
+		<a class="settings-item" href="{{ url_for('change_password') }}"><span class="settings-icon"><i data-lucide="key-round"></i></span><span class="settings-copy"><strong>Change Password</strong><small>Update your account password securely</small></span><i class="settings-arrow" data-lucide="chevron-right"></i></a>
+		<a class="settings-item" href="#workspace-preferences"><span class="settings-icon"><i data-lucide="bell-ring"></i></span><span class="settings-copy"><strong>Notification Settings</strong><small>Manage alert notification preferences</small></span><i class="settings-arrow" data-lucide="chevron-right"></i></a>
+	</section>
+	<form class="panel form-card workspace-settings" id="workspace-preferences" method="post"><p class="eyebrow">WORKSPACE PREFERENCES</p><h2>Workspace defaults</h2><p class="muted">These preferences are used across your SmartStock AI workspace.</p><div class="form-grid"><label>Default Forecast Horizon<select name="default_forecast_horizon"><option {% if settings['default_forecast_horizon']==7 %}selected{% endif %}>7</option><option {% if settings['default_forecast_horizon']==14 %}selected{% endif %}>14</option><option {% if settings['default_forecast_horizon']==30 %}selected{% endif %}>30</option></select></label><label>Default Region<input name="default_region" value="{{ settings['default_region'] or '' }}"></label><label>Default Unit<input name="default_unit" value="{{ settings['default_unit'] or '' }}"></label><label class="toggle-field"><span>Alert notifications</span><input type="checkbox" name="alert_enabled" {% if settings['alert_enabled'] %}checked{% endif %}></label></div><button class="primary" type="submit">Save Settings</button></form>
+</section>
+{% endblock %}

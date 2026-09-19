@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block content %}
+<section class="welcome page-intro">
+	<div><p class="eyebrow">WHOLESALE OPERATIONS</p><h2>Welcome back, {{ g.user['full_name'] }}</h2><p class="muted">A clear view of stock health, demand signals, and today’s actions.</p></div>
+	<a class="primary button" href="{{ url_for('product_new') }}">＋ Add Product</a>
+</section>
+
+<section class="kpis">
+	<article><div class="kpi-icon">▦</div><span>Total Products</span><strong>{{ products|length }}</strong><small class="kpi-note">Active catalog items</small></article>
+	<article><div class="kpi-icon">↗</div><span>Today's Sales</span><strong>{{ '%.1f'|format(sales_today) }}</strong><small class="kpi-note">Units recorded today</small></article>
+	<article><div class="kpi-icon">▤</div><span>Current Stock</span><strong>{{ '%.1f'|format(products|sum(attribute='current_stock')) }}</strong><small class="kpi-note">Across all products</small></article>
+	<article><div class="kpi-icon alert-icon">!</div><span>Active Alerts</span><strong>{{ alerts }}</strong><small class="kpi-note">Needs attention now</small></article>
+</section>
+
+<section class="panel dashboard-table">
+	<div class="section-head"><div><p class="section-label">INVENTORY INTELLIGENCE</p><h2>Products Requiring Attention</h2><p class="muted section-description">Prioritize replenishment using current stock and calculated reorder points.</p></div><a class="button" href="{{ url_for('inventory_page') }}">View inventory</a></div>
+	{% if products %}<div class="table-wrap"><table><thead><tr><th>Product</th><th>Current Stock</th><th>Safety Stock</th><th>Reorder Point</th><th>Suggested Order</th><th>Status</th></tr></thead><tbody>{% for p in products %}<tr><td><span class="product-mark">{{ p.name[:1]|upper }}</span><span class="product-name">{{ p.name }}</span></td><td>{{ '%.1f'|format(p.current_stock) }} {{ p.unit }}</td><td>{{ '%.1f'|format(p.safety_stock) }}</td><td>{{ '%.1f'|format(p.reorder_point) }}</td><td><strong>{{ '%.1f'|format(p.suggested_order_quantity) }} {{ p.unit }}</strong></td><td><span class="badge {{ p.status|lower|replace(' ','-') }}">{{ p.status }}</span></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty"><strong>No products yet</strong><span>Add your first product to start tracking stock.</span><a class="button" href="{{ url_for('product_new') }}">Add product</a></div>{% endif %}
+</section>
+
+<section class="quick action-grid"><a class="panel" href="{{ url_for('product_new') }}"><span class="action-icon">＋</span><b>Add Product</b><small>Set up a new catalog item</small></a><a class="panel" href="{{ url_for('sale_new') }}"><span class="action-icon">↗</span><b>Record Sale</b><small>Update stock from an actual sale</small></a><a class="panel" href="{{ url_for('stock_in') }}"><span class="action-icon">▤</span><b>Add Stock</b><small>Receive inventory into stock</small></a><a class="panel" href="{{ url_for('forecasts_page') }}"><span class="action-icon">✦</span><b>View Forecast</b><small>Inspect AI demand signals</small></a><a class="panel" href="{{ url_for('alerts_page') }}"><span class="action-icon">!</span><b>View Alerts</b><small>Review active inventory risks</small></a></section>
+{% endblock %}

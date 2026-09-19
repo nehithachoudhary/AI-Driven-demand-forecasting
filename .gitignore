@@ -1,0 +1,11 @@
+venv/
+instance/
+tensorflow_download/
+customer_models/
+__pycache__/
+*.pyc
+.pytest_cache/
+models/*
+results/figures/*
+results/forecasts/*
+data/processed/*
